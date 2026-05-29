@@ -3,6 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>経営会議 議題提起｜次の飛躍に向けた事業ポートフォリオ戦略</title>
+  <script>
+    (function(){
+      var ok = sessionStorage.getItem('auth');
+      if(ok !== '1'){
+        var pw = prompt('パスワードを入力してください');
+        if(pw === 'noro0604'){ sessionStorage.setItem('auth','1'); }
+        else { document.write('<style>body{display:none}</style>'); alert('パスワードが違います'); location.reload(); }
+      }
+    })();
+  </script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
   <style>
     :root {
