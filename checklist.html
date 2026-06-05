@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    (function(){
+      var ok = sessionStorage.getItem('auth');
+      if(ok !== '1'){
+        var pw = prompt('パスワードを入力してください');
+        if(pw === 'noro0604'){ sessionStorage.setItem('auth','1'); }
+        else { document.write('<style>body{display:none}</style>'); alert('パスワードが違います'); location.reload(); }
+      }
+    })();
+  </script>
+  <title>現地調査チェックリスト 6/10</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, 'Hiragino Kaku Gothic ProN', sans-serif;
+      background: #f5f5f5;
+      color: #222;
+      padding: 16px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 18px;
+      color: #1a2744;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 20px;
+    }
+    .section {
+      background: #fff;
+      border-radius: 10px;
+      margin-bottom: 14px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+    .section-hdr {
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hdr-water  { background: #3a9ab8; }
+    .hdr-tree   { background: #4a7c3f; }
+    .hdr-field  { background: #7a6a2a; }
+    .hdr-road   { background: #6a4a2a; }
+    .hdr-infra  { background: #555; }
+    .hdr-record { background: #8a3a8a; }
+    .hdr-prep   { background: #1a2744; }
+    .hdr-memo   { background: #c05a00; }
+    .note {
+      font-size: 11px;
+      opacity: .85;
+      font-weight: normal;
+    }
+    .items { padding: 8px 0; }
+    .item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 16px;
+      border-bottom: 1px solid #f0f0f0;
+      cursor: pointer;
+    }
+    .item:last-child { border-bottom: none; }
+    .item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-top: 1px;
+      flex-shrink: 0;
+      accent-color: #3a9ab8;
+    }
+    .item label {
+      font-size: 14px;
+      line-height: 1.5;
+      cursor: pointer;
+    }
+    .item.checked label {
+      color: #aaa;
+      text-decoration: line-through;
+    }
+    .memo-area {
+      padding: 12px 16px;
+    }
+    .memo-area textarea {
+      width: 100%;
+      min-height: 100px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      resize: vertical;
+    }
+    .warning {
+      background: #fff3cd;
+      border-left: 4px solid #e07a20;
+      padding: 10px 14px;
+      border-radius: 0 6px 6px 0;
+      font-size: 13px;
+      margin-bottom: 14px;
+      color: #7a4000;
+    }
+    .safety {
+      text-align: center;
+      font-size: 13px;
+      color: #888;
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+    .progress-bar {
+      background: #e0e0e0;
+      border-radius: 4px;
+      height: 6px;
+      margin: 8px 16px 0;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #3a9ab8;
+      border-radius: 4px;
+      transition: width .3s;
+    }
+    .progress-text {
+      font-size: 11px;
+      color: #888;
+      text-align: right;
+      padding: 2px 16px 8px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>野呂山 現地調査チェックリスト</h1>
+<div class="subtitle">2026年6月10日（単独）｜影井さん訪問 6/15 の前に把握する</div>
+
+<div class="warning">
+  ⚠️ 水源の確認が最重要。影井さんが必ず聞くので必ず答えられる状態に。
+</div>
+
+<!-- 事前準備 -->
+<div class="section">
+  <div class="section-hdr hdr-prep">🎒 事前準備（前日まで）</div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-prep" style="width:0%"></div></div>
+  <div class="progress-text" id="text-prep">0 / 7</div>
+  <div class="items" id="group-prep">
+    <div class="item"><input type="checkbox" id="p1"><label for="p1">仮払機・燃料・保護具（フェイスガード・グローブ）</label></div>
+    <div class="item"><input type="checkbox" id="p2"><label for="p2">長靴・長袖・ヤマビル対策（塩・虫よけ）</label></div>
+    <div class="item"><input type="checkbox" id="p3"><label for="p3">スマホ充電満タン・モバイルバッテリー</label></div>
+    <div class="item"><input type="checkbox" id="p4"><label for="p4">カメラ or 動画撮影用スマホ</label></div>
+    <div class="item"><input type="checkbox" id="p5"><label for="p5">メジャー・巻き尺</label></div>
+    <div class="item"><input type="checkbox" id="p6"><label for="p6">メモ帳・マジック</label></div>
+    <div class="item"><input type="checkbox" id="p7"><label for="p7">水・食料・救急セット</label></div>
+  </div>
+</div>
+
+<!-- 水 -->
+<div class="section">
+  <div class="section-hdr hdr-water">💧 1. 水・水源【最重要】</div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-water" style="width:0%"></div></div>
+  <div class="progress-text" id="text-water">0 / 6</div>
+  <div class="items" id="group-water">
+    <div class="item"><input type="checkbox" id="w1"><label for="w1">水道の引き込みはあるか（メーター・蛇口の場所）</label></div>
+    <div class="item"><input type="checkbox" id="w2"><label for="w2">水道がある場合、実際に水が出るか確認</label></div>
+    <div class="item"><input type="checkbox" id="w3"><label for="w3">沢・湧き水・池の有無と場所</label></div>
+    <div class="item"><input type="checkbox" id="w4"><label for="w4">雨水タンク設置できそうな平坦スペースはあるか</label></div>
+    <div class="item"><input type="checkbox" id="w5"><label for="w5">水源からホダ場候補地までの距離・高低差</label></div>
+    <div class="item"><input type="checkbox" id="w6"><label for="w6">写真・動画で記録</label></div>
+  </div>
+</div>
+
+<!-- 広葉樹 -->
+<div class="section">
+  <div class="section-hdr hdr-tree">🌳 2. 広葉樹資源（ホダ木候補）</div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-tree" style="width:0%"></div></div>
+  <div class="progress-text" id="text-tree">0 / 5</div>
+  <div class="items" id="group-tree">
+    <div class="item"><input type="checkbox" id="t1"><label for="t1">コナラ・クヌギ・ナラ等の分布エリアを確認</label></div>
+    <div class="item"><input type="checkbox" id="t2"><label for="t2">胸高直径10〜15cmの適径木がどのくらいあるか</label></div>
+    <div class="item"><input type="checkbox" id="t3"><label for="t3">伐採・搬出が現実的な場所にあるか（斜面・障害物）</label></div>
+    <div class="item"><input type="checkbox" id="t4"><label for="t4">おおよその本数をカウント or エリアを写真で記録</label></div>
+    <div class="item"><input type="checkbox" id="t5"><label for="t5">保安林の指定がなさそうか（感覚で）</label></div>
+  </div>
+</div>
+
+<!-- ホダ場 -->
+<div class="section">
+  <div class="section-hdr hdr-field">🍄 3. ホダ場の候補地</div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-field" style="width:0%"></div></div>
+  <div class="progress-text" id="text-field">0 / 5</div>
+  <div class="items" id="group-field">
+    <div class="item"><input type="checkbox" id="f1"><label for="f1">平坦または緩やかな傾斜地の有無と広さ</label></div>
+    <div class="item"><input type="checkbox" id="f2"><label for="f2">直射日光が当たりすぎない（半日陰）か</label></div>
+    <div class="item"><input type="checkbox" id="f3"><label for="f3">水源からの距離（散水ホースが届くか）</label></div>
+    <div class="item"><input type="checkbox" id="f4"><label for="f4">獣害の痕跡（イノシシ・シカの足跡・掘り返し跡）</label></div>
+    <div class="item"><input type="checkbox" id="f5"><label for="f5">候補地を複数写真で記録・おおよその面積メモ</label></div>
+  </div>
+</div>
+
+<!-- 搬出路 -->
+<div class="section">
+  <div class="section-hdr hdr-road">🚗 4. 搬出路・作業動線</div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-road" style="width:0%"></div></div>
+  <div class="progress-text" id="text-road">0 / 4</div>
+  <div class="items" id="group-road">
+    <div class="item"><input type="checkbox" id="r1"><label for="r1">軽トラが入れるルートがあるか</label></div>
+    <div class="item"><input type="checkbox" id="r2"><label for="r2">入れない場合、最も近く停められる場所はどこか</label></div>
+    <div class="item"><input type="checkbox" id="r3"><label for="r3">徒歩ルートの状態（草・倒木・急斜面）</label></div>
+    <div class="item"><input type="checkbox" id="r4"><label for="r4">仮払機で最低限の通路を確保できたか</label></div>
+  </div>
+</div>
+
+<!-- 既存設備 -->
+<div class="section">
+  <div class="section-hdr hdr-infra">🏚️ 5. 既存設備・構造物</div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-infra" style="width:0%"></div></div>
+  <div class="progress-text" id="text-infra">0 / 4</div>
+  <div class="items" id="group-infra">
+    <div class="item"><input type="checkbox" id="i1"><label for="i1">小屋・作業スペースの有無と状態</label></div>
+    <div class="item"><input type="checkbox" id="i2"><label for="i2">電気の引き込みはあるか</label></div>
+    <div class="item"><input type="checkbox" id="i3"><label for="i3">既存の柵・フェンスの状態</label></div>
+    <div class="item"><input type="checkbox" id="i4"><label for="i4">使えそうな農具・資材が残っていないか</label></div>
+  </div>
+</div>
+
+<!-- 記録 -->
+<div class="section">
+  <div class="section-hdr hdr-record">📸 6. 全体の記録</div>
+  <div class="progress-bar"><div class="progress-fill" id="prog-record" style="width:0%"></div></div>
+  <div class="progress-text" id="text-record">0 / 4</div>
+  <div class="items" id="group-record">
+    <div class="item"><input type="checkbox" id="rc1"><label for="rc1">入口〜ホダ場候補地までの動画（歩き撮り）</label></div>
+    <div class="item"><input type="checkbox" id="rc2"><label for="rc2">全体のパノラマ写真（各方角）</label></div>
+    <div class="item"><input type="checkbox" id="rc3"><label for="rc3">課題箇所を写真でマーク</label></div>
+    <div class="item"><input type="checkbox" id="rc4"><label for="rc4">所要時間・距離感をメモ</label></div>
+  </div>
+</div>
+
+<!-- メモ -->
+<div class="section">
+  <div class="section-hdr hdr-memo">📝 6/15 影井さんへの質問メモ</div>
+  <div class="memo-area">
+    <textarea placeholder="現地で疑問に思ったことをここに書いておく"></textarea>
+  </div>
+</div>
+
+<div class="safety">⛰️ 安全第一。無理せず、迷ったら引き返す。</div>
+
+<script>
+  const groups = {
+    'prep':   { total: 7 },
+    'water':  { total: 6 },
+    'tree':   { total: 5 },
+    'field':  { total: 5 },
+    'road':   { total: 4 },
+    'infra':  { total: 4 },
+    'record': { total: 4 },
+  };
+
+  function updateGroup(groupId) {
+    const group = document.getElementById('group-' + groupId);
+    const checks = group.querySelectorAll('input[type="checkbox"]');
+    const total = checks.length;
+    const done = Array.from(checks).filter(c => c.checked).length;
+    document.getElementById('prog-' + groupId).style.width = (done / total * 100) + '%';
+    document.getElementById('text-' + groupId).textContent = done + ' / ' + total;
+    checks.forEach(c => {
+      c.parentElement.classList.toggle('checked', c.checked);
+    });
+  }
+
+  document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const groupEl = cb.closest('[id^="group-"]');
+      if (groupEl) {
+        const gid = groupEl.id.replace('group-', '');
+        updateGroup(gid);
+      }
+    });
+  });
+</script>
+</body>
+</html>
