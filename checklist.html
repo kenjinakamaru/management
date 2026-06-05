@@ -142,9 +142,12 @@
 <div class="section">
   <div class="section-hdr hdr-prep">🎒 事前準備（前日まで）</div>
   <div class="progress-bar"><div class="progress-fill" id="prog-prep" style="width:0%"></div></div>
-  <div class="progress-text" id="text-prep">0 / 7</div>
+  <div class="progress-text" id="text-prep">0 / 10</div>
   <div class="items" id="group-prep">
     <div class="item"><input type="checkbox" id="p1"><label for="p1">仮払機・燃料・保護具（フェイスガード・グローブ）</label></div>
+    <div class="item"><input type="checkbox" id="p1b"><label for="p1b">作業着（つなぎ）</label></div>
+    <div class="item"><input type="checkbox" id="p1c"><label for="p1c">鉈</label></div>
+    <div class="item"><input type="checkbox" id="p1d"><label for="p1d">革手袋</label></div>
     <div class="item"><input type="checkbox" id="p2"><label for="p2">長靴・長袖・ヤマビル対策（塩・虫よけ）</label></div>
     <div class="item"><input type="checkbox" id="p3"><label for="p3">スマホ充電満タン・モバイルバッテリー</label></div>
     <div class="item"><input type="checkbox" id="p4"><label for="p4">カメラ or 動画撮影用スマホ</label></div>
@@ -238,9 +241,22 @@
 
 <!-- メモ -->
 <div class="section">
-  <div class="section-hdr hdr-memo">📝 6/15 影井さんへの質問メモ</div>
+  <div class="section-hdr hdr-memo">📝 6/15 影井さんへの質問リスト</div>
   <div class="memo-area">
-    <textarea placeholder="現地で疑問に思ったことをここに書いておく"></textarea>
+    <div style="font-size:13px; color:#333; line-height:1.8; padding-bottom:10px; border-bottom:1px solid #eee; margin-bottom:10px;">
+      <b>Q1. 発生時期について</b><br>
+      「早い場合は植菌した年の秋から発生することもある」とあるが、これは浸水（水浸法）を行った場合のこと？
+      自然発生の場合は植菌して2夏経過・4〜5年継続とのことだが、人工的に手を加える（浸水等）ことで発生スピードを早めることができるという意味か？
+    </div>
+    <div style="font-size:13px; color:#333; line-height:1.8; padding-bottom:10px; border-bottom:1px solid #eee; margin-bottom:10px;">
+      <b>Q2. 浸水と散水の違いについて</b><br>
+      浸水（ほだ木を水に漬ける）と散水（水をかける）は何が違うのか？
+      大量に散水することで浸水と同じ効果を得ることはできないか？
+    </div>
+    <div style="font-size:13px; color:#999;">
+      ↓ 現地で疑問に思ったことを追記
+    </div>
+    <textarea placeholder="現地調査中に出てきた追加の質問をここにメモ" style="margin-top:8px;"></textarea>
   </div>
 </div>
 
@@ -248,7 +264,7 @@
 
 <script>
   const groups = {
-    'prep':   { total: 7 },
+    'prep':   { total: 10 },
     'water':  { total: 6 },
     'tree':   { total: 5 },
     'field':  { total: 5 },
