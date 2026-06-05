@@ -3,16 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script>
-    (function(){
-      var ok = sessionStorage.getItem('auth');
-      if(ok !== '1'){
-        var pw = prompt('パスワードを入力してください');
-        if(pw === 'noro0604'){ sessionStorage.setItem('auth','1'); }
-        else { document.write('<style>body{display:none}</style>'); alert('パスワードが違います'); location.reload(); }
-      }
-    })();
-  </script>
   <title>現地調査チェックリスト 6/10</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
