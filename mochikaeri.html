@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>持ち帰り会 制度設計</title>
+<meta name="description" content="フォノグラムの新しい月次学習会「持ち帰り会」の制度設計ドキュメント">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #F6F7FA;
+    --surface:     #FFFFFF;
+    --ink:         #141422;
+    --ink-mid:     #55566A;
+    --ink-light:   #9293A8;
+    --accent:      #2856A6;
+    --accent-tint: #EBF0FA;
+    --brick:       #C44E1F;
+    --border:      #CBCCD8;
+
+    --font: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium", "Yu Gothic", Meiryo, "Noto Sans JP", sans-serif;
+    --r: 6px;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── HEADER ── */
+  .doc-header {
+    padding: 56px 0 48px;
+    border-bottom: 1.5px solid var(--border);
+    margin-bottom: 52px;
+  }
+
+  .doc-eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+
+  .doc-title {
+    font-size: clamp(32px, 6vw, 52px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 14px;
+  }
+
+  .doc-subtitle {
+    font-size: 17px;
+    color: var(--ink-mid);
+    line-height: 1.6;
+    max-width: 540px;
+  }
+
+  .doc-meta {
+    margin-top: 28px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .meta-chip {
+    font-size: 12px;
+    color: var(--ink-mid);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .meta-chip::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+
+  /* ── SECTION ── */
+  .section {
+    margin-bottom: 56px;
+  }
+
+  .section-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-heading {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 14px;
+    letter-spacing: -0.01em;
+  }
+
+  .body-text {
+    font-size: 15px;
+    color: var(--ink-mid);
+    line-height: 1.8;
+  }
+
+  .body-text + .body-text { margin-top: 12px; }
+
+  /* ── STATS STRIP ── */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 56px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 20px 18px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--ink-light);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-unit {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink-mid);
+    margin-left: 2px;
+  }
+
+  .facilitator-note {
+    font-size: 13px;
+    color: var(--ink-mid);
+    background: #FFFBEC;
+    border: 1px solid #E8D97A;
+    border-left: 3px solid #D4B800;
+    border-radius: 0 4px 4px 0;
+    padding: 10px 14px;
+    line-height: 1.65;
+    margin-bottom: 52px;
+  }
+
+  /* ── FLOOR CONCEPT ── */
+  .floors {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+    margin-top: 24px;
+    position: relative;
+  }
+
+  .floor-item {
+    padding: 20px 18px 52px; /* bottom space for arrow overlay */
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .floor-item:last-child { border-right: none; }
+
+  /* SVG arrow overlay — sits at the bottom of all 3 cards, no extra row */
+  .floors-arrow {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    line-height: 0;
+  }
+
+  .floors-arrow svg { width: 100%; display: block; }
+
+  .floor-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .floor-tag.ground { color: var(--ink-light); }
+  .floor-tag.one    { color: var(--accent); }
+  .floor-tag.two    { color: var(--brick); }
+
+  .floor-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .floor-desc {
+    font-size: 12.5px;
+    color: var(--ink-mid);
+    line-height: 1.6;
+  }
+
+  .floor-desc.pending {
+    color: var(--ink-light);
+    font-style: italic;
+  }
+
+
+  /* ── PREP CARD ── */
+  .prep-card {
+    background: var(--accent-tint);
+    border: 1px solid #C5D5EF;
+    border-radius: var(--r);
+    padding: 24px 26px;
+  }
+
+  .prep-card-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+
+  /* Excel ライクなセルフォーマット */
+  .prep-sheet {
+    background: var(--surface);
+    border: 1px solid #C5D5EF;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 14px;
+  }
+
+  .sheet-title {
+    background: var(--accent);
+    color: #fff;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 7px 14px;
+  }
+
+  .sheet-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .sheet-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--ink-mid);
+    background: #EEF0F8;
+    padding: 11px 14px;
+    width: 38%;
+    border-right: 1px solid #D4D6E8;
+    border-bottom: 1px solid #D8DCF0;
+    vertical-align: top;
+    text-align: left;
+    line-height: 1.5;
+  }
+
+  .sheet-hint {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--ink-light);
+    margin-top: 3px;
+    line-height: 1.4;
+  }
+
+  .sheet-cell {
+    font-size: 13px;
+    color: var(--ink-light);
+    font-style: italic;
+    padding: 11px 14px;
+    background: var(--surface);
+    border-bottom: 1px solid #E8ECF8;
+    vertical-align: top;
+    line-height: 1.65;
+  }
+
+  tr:last-child .sheet-label,
+  tr:last-child .sheet-cell { border-bottom: none; }
+
+  .prep-note {
+    font-size: 13px;
+    color: var(--ink-mid);
+    margin-top: 12px;
+    line-height: 1.7;
+  }
+
+  /* ── FACILITATOR CHECKLIST ── */
+  .checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .cl-group {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+
+  .cl-when {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 9px 14px 9px 16px;
+    list-style: none;       /* summary のデフォルトマーカーを消す */
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* border-bottom は open 時のみ表示 */
+  }
+
+  /* ブラウザ既定の ▶ マーカーを消す */
+  .cl-when::-webkit-details-marker { display: none; }
+  .cl-when::marker { content: none; }
+
+  /* 開閉シェブロン */
+  .cl-when::after {
+    content: '';
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18' fill='none'%3E%3Cpath d='M5 7l4 4 4-4' stroke='%239293A8' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: transform 0.22s ease;
+  }
+
+  /* 開いているときシェブロン反転 */
+  details.cl-group[open] > .cl-when::after {
+    transform: rotate(180deg);
+  }
+
+  /* 開いているときのみ区切り線 */
+  details.cl-group[open] > .cl-when {
+    border-bottom: 1px solid;
+  }
+
+  /* 色バリアント */
+  .cl-when--neutral { background: var(--bg);         color: var(--ink-mid); border-color: var(--border); }
+  .cl-when--blue    { background: var(--accent-tint); color: var(--accent);  border-color: #C5D5EF; }
+  .cl-when--mid     { background: #ECEAF8;            color: #3545A8;        border-color: #CAC8E8; }
+  .cl-when--brick   { background: #FEF0E8;            color: var(--brick);   border-color: #F0C4A8; }
+
+  /* コンテンツの展開アニメーション */
+  details.cl-group[open] .cl-tasks {
+    animation: clOpen 0.2s ease-out;
+  }
+
+  @keyframes clOpen {
+    from { opacity: 0; transform: translateY(-5px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .cl-tasks { list-style: none; padding: 6px 0 2px; }
+
+  .cl-task {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.6;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cl-task:last-child { border-bottom: none; }
+
+  /* label がタスク行全体をカバーしてどこでもチェックできる */
+  .cl-task > label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 16px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  /* ネイティブチェックボックスは非表示 */
+  .cl-task input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+
+  /* カスタムチェックボックス */
+  .cl-box {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid #BEBEC8;
+    border-radius: 3px;
+    background: var(--surface);
+    flex-shrink: 0;
+    margin-top: 2px;
+    position: relative;
+    transition: background 0.18s ease, border-color 0.18s ease, transform 0.1s ease;
+  }
+
+  /* タップ時のフィードバック */
+  .cl-task > label:active .cl-box {
+    transform: scale(0.82);
+  }
+
+  /* チェックマーク（L字を回転した形） */
+  .cl-box::after {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 1px;
+    width: 8px;
+    height: 5px;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    border-radius: 0.5px;
+    transform: rotate(-45deg) scale(0);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) 0.05s;
+  }
+
+  /* チェック済み：ボックスが塗りつぶされる */
+  .cl-task input:checked + .cl-box {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* チェック済み：チェックマークがポップイン */
+  .cl-task input:checked + .cl-box::after {
+    transform: rotate(-45deg) scale(1);
+  }
+
+  /* タスクテキストラッパー */
+  .cl-content {
+    flex: 1;
+    transition: opacity 0.4s ease;
+  }
+
+  /* チェック済み：テキストが薄くなり取り消し線 */
+  .cl-task input:checked ~ .cl-content {
+    opacity: 0.32;
+    text-decoration: line-through;
+    text-decoration-color: var(--ink-mid);
+  }
+
+  /* 補足メモには取り消し線を引かない */
+  .cl-task input:checked ~ .cl-content .cl-note {
+    text-decoration: none;
+  }
+
+  .cl-note {
+    display: block;
+    font-size: 12px;
+    color: var(--ink-light);
+    margin-top: 4px;
+    line-height: 1.55;
+  }
+
+  .cl-role {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 1px 7px;
+    border-radius: 2px;
+    margin-left: 6px;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  .cl-role--blue  { background: var(--accent-tint); color: var(--accent); }
+  .cl-role--brick { background: #FEF0E8; color: var(--brick); }
+
+  /* ── STEPS ── */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 0;
+    position: relative;
+  }
+
+  .step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 31px;
+    top: 70px; /* 16px padding-top + 50px circle + 4px gap */
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+
+  .step-num-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 16px;
+  }
+
+  .step-num {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .sn-label {
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    opacity: 0.88;
+  }
+
+  .sn-n {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .step-num.brick { background: var(--brick); }
+
+  .step-body {
+    padding: 14px 0 44px 20px;
+  }
+
+  .step-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .step-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .step-time {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-light);
+    letter-spacing: 0.05em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .step-desc {
+    font-size: 15px;
+    color: var(--ink-mid);
+    line-height: 1.8;
+    margin-bottom: 14px;
+  }
+
+  .step-note {
+    display: flex;
+    gap: 10px;
+    background: var(--accent-tint);
+    border-left: 3px solid var(--accent);
+    padding: 12px 14px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .step-note-text {
+    font-size: 13px;
+    color: var(--accent);
+    line-height: 1.65;
+  }
+
+  .step-qs {
+    margin-top: 12px;
+    list-style: none;
+  }
+
+  .step-qs li {
+    font-size: 14px;
+    color: var(--ink-mid);
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+  }
+
+  .step-qs li::before {
+    content: '›';
+    color: var(--accent);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .step-qs li:last-child { border-bottom: none; }
+
+  .declaration-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 18px 20px;
+    margin-top: 12px;
+  }
+
+  .declaration-box p {
+    font-size: 14px;
+    color: var(--ink);
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .declaration-box p:last-child { border-bottom: none; }
+
+  .decl-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--brick);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  /* ── TEIREIKAI ── */
+  .tk-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tk-item {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+
+  .tk-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-tint);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    border-right: 1px solid #C5D5EF;
+    letter-spacing: 0.02em;
+  }
+
+  .tk-body { padding: 16px 18px; }
+
+  .tk-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 5px;
+  }
+
+  .tk-desc {
+    font-size: 13.5px;
+    color: var(--ink-mid);
+    line-height: 1.7;
+  }
+
+  /* ── FOLLOW-UP ── */
+  .followup-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 20px 24px;
+    align-items: start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 24px;
+  }
+
+  .followup-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #FEF0E8;
+    border: 1px solid #F0C4A8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .followup-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .followup-desc {
+    font-size: 14px;
+    color: var(--ink-mid);
+    line-height: 1.75;
+  }
+
+  /* ── OPS GRID ── */
+  .ops-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .ops-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 20px 18px;
+  }
+
+  .ops-card-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 10px;
+  }
+
+  .ops-card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .ops-card-body {
+    font-size: 13.5px;
+    color: var(--ink-mid);
+    line-height: 1.75;
+  }
+
+  .role-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 14px;
+  }
+
+  .role-table th {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  .role-table td {
+    padding: 12px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink-mid);
+    vertical-align: top;
+    line-height: 1.65;
+  }
+
+  .role-table tr:last-child td { border-bottom: none; }
+
+  .role-name {
+    font-weight: 700;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  /* ── COMPARISON TABLE ── */
+  .comp-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+  }
+
+  .comp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    min-width: 480px;
+  }
+
+  .comp-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 1.5px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .comp-table th:nth-child(1) { width: 28%; color: var(--ink-light); background: var(--bg); }
+  .comp-table th:nth-child(2) { width: 36%; color: var(--ink-mid); background: #F5F5F8; }
+  .comp-table th:nth-child(3) { width: 36%; color: var(--accent); background: var(--accent-tint); }
+
+  .comp-table td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.7;
+    color: var(--ink-mid);
+  }
+
+  .comp-table td:nth-child(1) { font-size: 12px; font-weight: 700; color: var(--ink); background: var(--bg); }
+  .comp-table td:nth-child(2) { background: #FAFAFA; }
+  .comp-table td:nth-child(3) { background: #F8FAFE; color: var(--ink); }
+  .comp-table tr:last-child td { border-bottom: none; }
+
+  /* ── FOOTER ── */
+  .doc-footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .footer-brand { font-size: 13px; font-weight: 700; color: var(--ink); }
+  .footer-date  { font-size: 12px; color: var(--ink-light); }
+
+  /* ── UTILITIES ── */
+  .mt-12 { margin-top: 12px; }
+  .mt-20 { margin-top: 20px; }
+  .mt-24 { margin-top: 24px; }
+
+  @media (max-width: 560px) {
+    .stats { grid-template-columns: 1fr 1fr; }
+    .stats .stat-card:last-child { grid-column: 1 / -1; }
+    .floors { grid-template-columns: 1fr; }
+    .floor-item { border-right: none; border-bottom: 1px solid var(--border); }
+    .floor-item:last-child { border-bottom: none; }
+    .floors-arrow { display: none; }
+    .floor-item { padding-bottom: 20px; }
+    .ops-grid { grid-template-columns: 1fr; }
+    .step { grid-template-columns: 48px 1fr; }
+    .step:not(:last-child)::after { left: 23px; }
+    .step-num { width: 42px; height: 42px; }
+    .sn-label { font-size: 6px; }
+    .sn-n { font-size: 14px; }
+    .followup-row { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+
+  /* ── BOARD ── */
+  .board-editor { display:flex; flex-direction:column; gap:20px; }
+  .board-fields { display:flex; flex-direction:column; gap:14px; }
+  .board-flabel {
+    display:block; font-size:12px; font-weight:700; letter-spacing:.04em;
+    color:var(--ink-mid); margin-bottom:6px;
+  }
+  .board-input,
+  .board-textarea {
+    width:100%; font-family:var(--font); font-size:14px; color:var(--ink);
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--r);
+    padding:10px 12px; outline:none; resize:vertical;
+    transition:border-color .15s, box-shadow .15s; box-sizing:border-box;
+  }
+  .board-input:focus,
+  .board-textarea:focus {
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(40,86,166,.1);
+  }
+  .board-preview {
+    width:100%; border-radius:var(--r); overflow:hidden;
+    box-shadow:0 4px 20px rgba(0,0,0,.18);
+  }
+  #b-canvas { width:100%; height:auto; display:block; }
+  .board-btn {
+    display:inline-flex; align-items:center; justify-content:center;
+    background:var(--accent); color:#fff; border:none; border-radius:4px;
+    padding:12px 24px; font-family:var(--font); font-size:14px; font-weight:700;
+    cursor:pointer; align-self:flex-start;
+    transition:background .15s, transform .1s;
+  }
+  .board-btn:hover { background:#1E4690; }
+  .board-btn:active { transform:scale(.97); }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ── HEADER ── -->
+  <header class="doc-header">
+    <span class="doc-eyebrow">Phonogram 社内制度</span>
+    <h1 class="doc-title">持ち帰り会</h1>
+    <p class="doc-subtitle">メンバー・他チームの経験を自分の行動に変える、それが「持ち帰り会」</p>
+    <div class="doc-meta">
+      <span class="meta-chip">対象：全正社員 21名</span>
+      <span class="meta-chip">頻度：月1回</span>
+      <span class="meta-chip">所要時間：30分</span>
+      <span class="meta-chip">2026年7月 開始</span>
+    </div>
+  </header>
+
+  <!-- ── STATS ── -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-label">参加人数</div>
+      <div class="stat-value">21<span class="stat-unit">名</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">グループ構成</div>
+      <div class="stat-value">5<span class="stat-unit">グループ</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">1グループあたり</div>
+      <div class="stat-value">4–5<span class="stat-unit">名</span></div>
+    </div>
+  </div>
+
+  <p class="facilitator-note">📌 担当者2名も参加者です。グループ編成の際に、自分たちをどこかのグループに入れ忘れないよう注意。</p>
+
+  <!-- ── PURPOSE ── -->
+  <section class="section">
+    <div class="section-label">1　この会の目的</div>
+    <h2 class="section-heading">自チームを超えた視野を、明日の行動に変える</h2>
+    <p class="body-text">「持ち帰り会」は、他チームで起こった出来事・挑戦・発見を聞き、自分に置き換えることで気づきを得る場です。会の名前のとおり、必ず「何か」を持ち帰って翌日の行動に活かすことをゴールとします。</p>
+    <p class="body-text mt-12">隣のチームが何に悩み、何に挑んでいるかを知ることは、会社全体を「自分ごと」として見る経営者マインドの土台になります。</p>
+
+    <div class="floors mt-24">
+      <div class="floor-item">
+        <div class="floor-tag ground">地面</div>
+        <div class="floor-name">人間関係</div>
+        <div class="floor-desc">組織の土台を強化</div>
+      </div>
+      <div class="floor-item">
+        <div class="floor-tag one">1F</div>
+        <div class="floor-name">業務</div>
+        <div class="floor-desc">目の前の成果を高め、最適化する</div>
+      </div>
+      <div class="floor-item">
+        <div class="floor-tag two">2F</div>
+        <div class="floor-name">未来</div>
+        <div class="floor-desc">中長期の方向性　価値を作る</div>
+      </div>
+
+
+      <!-- Arrow overlay: absolutely positioned at bottom of the 3 cards, no extra row -->
+      <div class="floors-arrow">
+        <!--
+          viewBox 0 0 600 42
+          Column mapping (3 equal cols):
+            地面:  x=0–200
+            1F:    x=200–400  center=300
+            2F:    x=400–600  center=500
+          Rendered height ≈ container_width × (42/600) ≈ 50px @ 712px wide
+        -->
+        <svg viewBox="0 0 600 42" xmlns="http://www.w3.org/2000/svg">
+          <!-- subtle separator line spanning 1F+2F area only -->
+          <line x1="200" y1="0" x2="600" y2="0" stroke="#CBCCD8" stroke-width="0.75"/>
+
+          <!-- 1F badge — centered in 2nd column -->
+          <rect x="222" y="9" width="156" height="24" rx="3" fill="#EBF0FA"/>
+          <text x="300" y="25.5"
+            text-anchor="middle"
+            font-family="'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic',Meiryo,sans-serif"
+            font-size="11" font-weight="700" fill="#2856A6" letter-spacing="0.5">1F：ここから声を拾う</text>
+
+          <!-- Arrow: from end of 1F badge → start of 2F badge -->
+          <line x1="379" y1="21" x2="426" y2="21"
+            stroke="#2856A6" stroke-width="1.5" stroke-linecap="round"/>
+          <polyline points="420,16 428,21 420,26"
+            fill="none" stroke="#2856A6" stroke-width="1.5"
+            stroke-linejoin="round" stroke-linecap="round"/>
+
+          <!-- 2F badge — centered in 3rd column -->
+          <rect x="433" y="9" width="134" height="24" rx="3" fill="#FEF0E8"/>
+          <text x="500" y="25.5"
+            text-anchor="middle"
+            font-family="'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic',Meiryo,sans-serif"
+            font-size="11" font-weight="700" fill="#C44E1F" letter-spacing="0.5">2F：ここに繋げる</text>
+        </svg>
+      </div>
+    </div>
+
+    <p class="body-text mt-12" style="font-size:13px;">持ち帰り会は 1F（業務の事実）を起点に、2F（組織の未来）を考える場として機能します。</p>
+  </section>
+
+  <!-- ── PREP ── -->
+  <section class="section">
+    <div class="section-label">2　事前準備</div>
+    <h2 class="section-heading">開催 3 日前の 17 時までに 今月の1コマ（Excel）へ記入</h2>
+    <div class="prep-card">
+      <div class="prep-card-label">記入フォーマット（今月の1コマ・Excel）</div>
+      <div class="prep-sheet">
+        <div class="sheet-title">【今月の1コマ】</div>
+        <table class="sheet-table">
+          <tr>
+            <th class="sheet-label">だれのこと？<span class="sheet-hint">自分 or メンバー名</span></th>
+            <td class="sheet-cell">自分 ／ ○○さん</td>
+          </tr>
+          <tr>
+            <th class="sheet-label">何があった？<span class="sheet-hint">出来事・状況を簡潔に</span></th>
+            <td class="sheet-cell">（2〜3行で記入）</td>
+          </tr>
+          <tr>
+            <th class="sheet-label">何が良かった？<br>何が難しかった？<span class="sheet-hint">どちらかの視点で</span></th>
+            <td class="sheet-cell">（感じたこと・気づいたことを）</td>
+          </tr>
+        </table>
+      </div>
+      <p class="prep-note">「自分」でも「他の誰か」でも OK。他者視点の記入が来ることで、本人が気づいていない良い行動が可視化されることがあります。この記入内容が STEP 1 の材料になります。</p>
+    </div>
+  </section>
+
+  <!-- ── FACILITATOR CHECKLIST ── -->
+  <section class="section">
+    <div class="section-label">3　担当者（2名）の準備</div>
+    <h2 class="section-heading">会当日までのチェックリスト</h2>
+    <p class="body-text" style="margin-bottom:28px;">投稿を集め・内容を精査し・グループを組む。会が時間通りに滞りなく成立するかどうかは、この3つの準備にかかっています。</p>
+
+    <div class="checklist">
+
+      <details class="cl-group">
+        <summary class="cl-when cl-when--neutral">2週間前まで</summary>
+        <ul class="cl-tasks">
+          <li class="cl-task"><label><input type="checkbox"><span class="cl-box"></span><span class="cl-content">メンバー繰り：4〜5グループになるよう配分を考える</span></label></li>
+          <li class="cl-task"><label><input type="checkbox"><span class="cl-box"></span><span class="cl-content">参加者の予定と照らし合わせて実施日時を確定し、会議室を抑える</span></label></li>
+          <li class="cl-task"><label><input type="checkbox"><span class="cl-box"></span><span class="cl-content">今月の1コマ（Excel）を準備する<span class="cl-note">フォームではなく、全員が閲覧・入力できるオープンな形式で</span></span></label></li>
+          <li class="cl-task"><label><input type="checkbox"><span class="cl-box"></span><span class="cl-content">開催要項を Teams で案内する<span class="cl-note">グループ・メンバー情報／開催日時／今月の1コマ（Excel）のリンク／入力を促すコメント</span></span></label></li>
+        </ul>
+      </details>
+
+      <details class="cl-group">
+        <summary class="cl-when cl-when--blue">〜締め切り（開催3日前 17:00）</summary>
+        <ul class="cl-tasks">
+          <li class="cl-task"><label><input type="checkbox"><span class="cl-box"></span><span class="cl-content">締め切り当日、チャンネルの投稿状況を確認する</span></label></li>
+          <li class="cl-task"><label><input type="checkbox"><span class="cl-box"></span><span class="cl-content">未投稿のメンバーに個別で声をかける</span></label></li>
+          <li class="cl-task"><label><input type="checkbox"><span class="cl-box"></span><span class="cl-content">全員分が揃ったことを確認する</span></label></li>
+        </ul>
+      </details>
+
+      <details class="cl-group">
+        <summary class="cl-when cl-when--mid">締め切り後〜前日</summary>
+        <ul class="cl-tasks">
+          <li class="cl-task"><label><input type="checkbox"><span class="cl-box"></span><span class="cl-content">全件の投稿を読む<span class="cl-note">2人で手分けして読んでも可</span></span></label></li>
+          <li class="cl-task"><label><input type="checkbox"><span class="cl-box"></span><span class="cl-content">各グループで深掘りできそうな投稿に目星をつけておく<span class="cl-note">「他のメンバーが気になりそうか？」「15分の深掘りに耐えるか？」を目安に</span></span></label></li>
+          <li class="cl-task"><label><input type="checkbox"><span class="cl-box"></span><span class="cl-content">ランダムシャッフルでグループ割り振りを作成する</span></label></li>
+          <li class="cl-task"><label><input type="checkbox"><span class="cl-box"></span><span class="cl-content">グループ割り振り表を Teams で全員に共有する</span></label></li>
+        </ul>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ── STEPS ── -->
+  <section class="section">
+    <div class="section-label">4　当日の流れ　計 30 分</div>
+    <h2 class="section-heading">3 つのステップで進行</h2>
+    <p class="body-text" style="margin-bottom:32px;">グループはクロスチームでその都度シャッフル。毎回違うメンバーと話すことで、部門を越えた視点が育ちます。</p>
+
+    <div class="steps">
+
+      <!-- STEP 1 -->
+      <div class="step">
+        <div class="step-num-col">
+          <div class="step-num"><span class="sn-label">STEP</span><span class="sn-n">1</span></div>
+        </div>
+        <div class="step-body">
+          <div class="step-header">
+            <span class="step-title">共有</span>
+            <span class="step-time">5 分</span>
+          </div>
+          <p class="step-desc">今月の1コマ（Excel）の記入内容を参考に、一人1分でシェアします。良い出来事・難しかった出来事、どちらも歓迎。</p>
+          <div class="step-note">
+            <span class="step-note-text">あらかじめ「重要なトピック」を選んでくる義務はなし。1分スピーチに軽量化することで、準備コストを下げます。</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step">
+        <div class="step-num-col">
+          <div class="step-num"><span class="sn-label">STEP</span><span class="sn-n">2</span></div>
+        </div>
+        <div class="step-body">
+          <div class="step-header">
+            <span class="step-title">選択と深掘り</span>
+            <span class="step-time">10 分</span>
+          </div>
+          <p class="step-desc">全員で「一番気になったエピソード」を多数決で1つ選びます。話者への質問を通じて状況を立体的に理解します。</p>
+          <ul class="step-qs">
+            <li>そのとき、どんな気持ちでしたか？</li>
+            <li>うまくいったとすれば、何が効きましたか？</li>
+            <li>うまくいかなかったとすれば、何が足りませんでしたか？</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step">
+        <div class="step-num-col">
+          <div class="step-num brick"><span class="sn-label">STEP</span><span class="sn-n">3</span></div>
+        </div>
+        <div class="step-body">
+          <div class="step-header">
+            <span class="step-title">持ち帰り宣言</span>
+            <span class="step-time">15 分</span>
+          </div>
+          <p class="step-desc">まず1分、静かに考える時間を取ります。</p>
+          <div class="step-note" style="margin-bottom:14px;">
+            <span class="step-note-text" style="font-weight:600;">「もし自分に同じことが起きたら、自分はどうする？」</span>
+          </div>
+          <p class="step-desc">その問いを踏まえて、一人ひとりが「持ち帰りボード」に気づきと宣言を入力しながら、声に出して発表します。</p>
+          <div class="declaration-box">
+            <p><span class="decl-label">気づき</span>今日気づいたこと</p>
+            <p><span class="decl-label">宣言</span>明日から試すこと（具体的に1つ）</p>
+          </div>
+          <div class="step-note mt-12">
+            <span class="step-note-text">「チームに持ち帰る」ではなく「自分が宣言する」構造にすることで、責任の所在を個人に自然に帰属させます。</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── TEIREIKAI ── -->
+  <section class="section">
+    <div class="section-label">5　定例会（翌月）</div>
+    <h2 class="section-heading">持ち帰り会の結果を全社共有</h2>
+    <p class="body-text" style="margin-bottom:24px;">持ち帰り会の翌月の定例会で、担当者が全メンバーに向けて報告します。</p>
+    <div class="tk-list">
+      <div class="tk-item">
+        <div class="tk-num">01</div>
+        <div class="tk-body">
+          <div class="tk-title">持ち帰りボードで全体観を報告</div>
+          <p class="tk-desc">持ち帰りボード（PNG カード）をスクリーンに映しながら、今月全員の宣言内容を全体に共有する。</p>
+        </div>
+      </div>
+      <div class="tk-item">
+        <div class="tk-num">02</div>
+        <div class="tk-body">
+          <div class="tk-title">今月の MVT を発表</div>
+          <p class="tk-desc">Most Valuable Takeout。担当者視点でなぜそれが良かったのか、所感を添えて紹介する。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOLLOWUP ── -->
+  <section class="section">
+    <div class="section-label">6　フォローアップ</div>
+    <h2 class="section-heading">翌月の定例会で 3 分の実践報告</h2>
+    <div class="followup-row">
+      <div class="followup-icon">📋</div>
+      <div class="followup-body">
+        <div class="followup-title">次回定例会の司会者が宣言の実践報告を行う</div>
+        <div class="followup-desc">定例会には毎月ローテーションで司会者が割り当てられています。その司会者が、前回の持ち帰り会で宣言したことを実際にやってみてどうだったかを3分で報告します。</div>
+      </div>
+    </div>
+    <p class="body-text mt-12" style="font-size:13px;">うまくいった報告は、次回の持ち帰り会でいい共有ネタになる好循環を生みます。</p>
+  </section>
+
+  <!-- ── COMPARISON ── -->
+  <section class="section">
+    <div class="section-label">7　旧「抽出会」との違い</div>
+    <h2 class="section-heading">何が変わったか</h2>
+    <div class="comp-table-wrap mt-20">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>観点</th>
+            <th>抽出会（旧）</th>
+            <th>持ち帰り会（新）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>テーマの主役</td>
+            <td>自チームの問題</td>
+            <td>他チームの経験</td>
+          </tr>
+          <tr>
+            <td>会の出力</td>
+            <td>解決策・担当者の決定</td>
+            <td>個人の行動宣言</td>
+          </tr>
+          <tr>
+            <td>フレーム</td>
+            <td>問題発見 → 解決</td>
+            <td>経験共有 → 自分ごと化</td>
+          </tr>
+          <tr>
+            <td>責任の所在</td>
+            <td>チーム or リーダー（曖昧になりやすい）</td>
+            <td>個人（自分が選んだ行動として明確）</td>
+          </tr>
+          <tr>
+            <td>準備コスト</td>
+            <td>重要トピックの事前抽出（義務）</td>
+            <td>今月の1コマに記入（3日前17時まで）</td>
+          </tr>
+          <tr>
+            <td>ネガ／ポジ</td>
+            <td>問題ベースの設計が前提</td>
+            <td>良い出来事も同等に扱える設計</td>
+          </tr>
+          <tr>
+            <td>所要時間</td>
+            <td>約 50 分</td>
+            <td>30 分</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="doc-footer">
+    <span class="footer-brand">Phonogram</span>
+    <span class="footer-date">2026年7月 改定</span>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var canvas = document.getElementById('b-canvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = 1280, H = 720, pL = 72, pR = 72;
+
+  function f(size, bold) {
+    return (bold ? 'bold ' : '') + size + 'px "Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium","Yu Gothic",Meiryo,sans-serif';
+  }
+
+  function wrapText(text, x, y, maxW, lh, maxL) {
+    if (!text || !text.trim()) {
+      ctx.fillStyle = 'rgba(255,255,255,0.18)';
+      ctx.fillText('（未記入）', x, y);
+      return y + lh;
+    }
+    var chars = Array.from(text);
+    var line = '', curY = y, count = 0;
+    for (var i = 0; i < chars.length; i++) {
+      if (chars[i] === '\n') {
+        ctx.fillText(line, x, curY);
+        line = ''; curY += lh; count++;
+        if (count >= maxL) return curY;
+        continue;
+      }
+      var test = line + chars[i];
+      if (ctx.measureText(test).width > maxW && line) {
+        ctx.fillText(line, x, curY);
+        line = chars[i]; curY += lh; count++;
+        if (count >= maxL) return curY;
+      } else {
+        line = test;
+      }
+    }
+    if (line && count < maxL) ctx.fillText(line, x, curY);
+    return curY + lh;
+  }
+
+  function hline(y) {
+    ctx.save();
+    ctx.strokeStyle = '#252538'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(pL, y); ctx.lineTo(W - pR, y); ctx.stroke();
+    ctx.restore();
+  }
+
+  function draw() {
+    var name = document.getElementById('b-name').value;
+    var ins  = document.getElementById('b-insight').value;
+    var decl = document.getElementById('b-declaration').value;
+    var now  = new Date();
+    var dateStr = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日';
+    var midX = W / 2, colW = midX - pL - 28, rColX = midX + 28;
+
+    ctx.fillStyle = '#141422'; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#2856A6'; ctx.fillRect(0, 0, 5, H);
+
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#3A3A56'; ctx.font = f(12);
+    ctx.fillText('Phonogram  /  持ち帰りボード', pL, 52);
+    ctx.textAlign = 'right'; ctx.fillText(dateStr, W - pR, 52);
+    ctx.textAlign = 'left';
+
+    ctx.fillStyle = name ? '#FFFFFF' : '#3A3A56';
+    ctx.font = f(26, true);
+    ctx.fillText(name || '（氏名）', pL, 94);
+
+    hline(114);
+
+    ctx.save();
+    ctx.strokeStyle = '#252538'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(midX, 130); ctx.lineTo(midX, H - 58); ctx.stroke();
+    ctx.restore();
+
+    var sY = 152;
+
+    ctx.fillStyle = '#4A7DD4'; ctx.font = f(11, true);
+    ctx.fillText('気 づ き', pL, sY);
+    ctx.fillStyle = '#3A3A56'; ctx.font = f(11);
+    ctx.fillText('今日気づいたこと', pL, sY + 20);
+    ctx.fillStyle = '#DDE0F0'; ctx.font = f(20);
+    wrapText(ins, pL, sY + 54, colW, 32, 13);
+
+    ctx.fillStyle = '#C26040'; ctx.font = f(11, true);
+    ctx.fillText('宣  言', rColX, sY);
+    ctx.fillStyle = '#3A3A56'; ctx.font = f(11);
+    ctx.fillText('明日から試すこと（具体的に1つ）', rColX, sY + 20);
+    ctx.fillStyle = '#DDE0F0'; ctx.font = f(20);
+    wrapText(decl, rColX, sY + 54, colW, 32, 13);
+
+    hline(H - 50);
+    ctx.fillStyle = '#282838'; ctx.font = f(11);
+    ctx.fillText('Phonogram', pL, H - 26);
+  }
+
+  draw();
+
+  ['b-name', 'b-insight', 'b-declaration'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', draw);
+  });
+
+  document.getElementById('b-download').addEventListener('click', function () {
+    var a = document.createElement('a');
+    a.download = '持ち帰りボード.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  });
+}());
+</script>
+
+</body>
+</html>
