@@ -1,0 +1,307 @@
+<title>持ち帰る会 — 参加者ガイド</title>
+<meta name="description" content="Phonogram 社内制度「持ち帰る会」の参加者向け概要ガイド。準備・当日の流れ・フォローアップを簡潔にまとめています。">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:      #F4F6FB;
+  --surf:    #FFFFFF;
+  --ink:     #141422;
+  --mid:     #4D4F6A;
+  --lt:      #8F90A8;
+  --border:  #D4D7E8;
+  --blue:    #2856A6;
+  --blue-t:  #EBF0FA;
+  --indigo:  #4845AA;
+  --indigo-t:#EEEDF8;
+  --brick:   #C44E1F;
+  --brick-t: #FEF0E8;
+  --r:6px;
+  --font:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic Medium","Yu Gothic",Meiryo,sans-serif;
+}
+
+html{font-size:16px}
+body{font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.75;-webkit-font-smoothing:antialiased}
+
+.page{max-width:660px;margin:0 auto;padding:0 20px 80px}
+
+/* ── HEADER ── */
+.hd{padding:48px 0 40px;border-bottom:1.5px solid var(--border);margin-bottom:44px}
+.hd-eye{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
+.hd-title{font-size:clamp(34px,7vw,52px);font-weight:700;letter-spacing:-.025em;line-height:1.1;color:var(--ink);margin-bottom:12px;text-wrap:balance}
+.hd-sub{font-size:15px;color:var(--mid);line-height:1.65;white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--surf);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--mid)}
+.chip b{color:var(--ink)}
+
+/* ── PURPOSE ── */
+.purpose{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:24px 26px;margin-bottom:44px}
+.purpose-label{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--lt);margin-bottom:10px}
+.purpose-text{font-size:15px;color:var(--mid);line-height:1.8}
+.purpose-text strong{color:var(--ink)}
+
+/* ── PREP ── */
+.section-label{font-size:19px;font-weight:700;letter-spacing:-.01em;color:var(--ink);margin-bottom:20px;padding-bottom:10px;border-bottom:2px solid var(--blue)}
+.prep{margin-bottom:44px}
+.deadline-bar{display:flex;align-items:center;gap:10px;background:var(--blue-t);border:1px solid #C5D5EF;border-radius:var(--r);padding:14px 18px;margin-bottom:18px}
+.deadline-icon{width:34px;height:34px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.deadline-icon svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round}
+.deadline-text{font-size:13.5px;color:var(--blue);line-height:1.55}
+.deadline-text strong{display:block;font-size:15px;color:var(--blue)}
+
+.prep-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.prep-row{display:grid;grid-template-columns:42% 1fr;border-bottom:1px solid var(--border)}
+.prep-row:last-child{border-bottom:none}
+.prep-q{padding:13px 16px;background:#F1F3FA;border-right:1px solid var(--border);font-size:13px;font-weight:700;color:var(--mid);line-height:1.5}
+.prep-q small{display:block;font-weight:400;font-size:11px;color:var(--lt);margin-top:3px;line-height:1.4}
+.prep-a{padding:13px 16px;font-size:13px;color:var(--lt);font-style:italic;line-height:1.6}
+
+.prep-note{margin-top:12px;font-size:12.5px;color:var(--mid);line-height:1.7;padding:10px 14px;background:#FEF8EC;border:1px solid #EDCF82;border-left:3px solid #D4B800;border-radius:0 4px 4px 0}
+.prep-note b{color:var(--brick)}
+
+/* ── STEPS ── */
+.steps-section{margin-bottom:44px}
+.steps{display:flex;flex-direction:column;gap:14px}
+
+.step-card{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.step-head{display:grid;grid-template-columns:64px 1fr auto;align-items:center;padding:18px 20px 18px 0;gap:0}
+.step-num-block{display:flex;align-items:center;justify-content:center;padding:0 4px 0 20px}
+.step-badge{width:44px;height:44px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;flex-shrink:0}
+.step-badge .sn-lbl{font-size:6.5px;font-weight:700;letter-spacing:.1em;line-height:1;opacity:.85}
+.step-badge .sn-n{font-size:16px;font-weight:700;line-height:1}
+.step-badge.c-blue   {background:var(--blue);   color:#fff}
+.step-badge.c-indigo {background:var(--indigo); color:#fff}
+.step-badge.c-brick  {background:var(--brick);  color:#fff}
+
+.step-title-wrap{padding-left:16px}
+.step-title{font-size:17px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+.step-time{display:inline-block;margin-top:3px;font-size:11px;font-weight:700;color:var(--lt);letter-spacing:.04em}
+.step-dur{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:4px 12px;font-size:12px;font-weight:700;color:var(--mid);font-variant-numeric:tabular-nums;white-space:nowrap;margin-right:18px}
+
+.step-body{padding:0 20px 20px 84px;font-size:14px;color:var(--mid);line-height:1.8;border-top:1px solid var(--border)}
+.step-body p{padding-top:16px}
+
+.step-key{display:flex;gap:10px;margin-top:14px;padding:12px 14px;border-radius:4px;border-left:3px solid;font-size:13px;line-height:1.6}
+.step-key.k-blue  {background:var(--blue-t);  border-color:var(--blue);  color:var(--blue)}
+.step-key.k-indigo{background:var(--indigo-t);border-color:var(--indigo);color:var(--indigo)}
+.step-key.k-brick {background:var(--brick-t); border-color:var(--brick); color:var(--brick)}
+
+.qs{list-style:none;margin-top:12px;display:flex;flex-direction:column;gap:0}
+.qs li{display:flex;gap:8px;font-size:13px;color:var(--mid);padding:7px 0;border-bottom:1px solid var(--border)}
+.qs li:last-child{border-bottom:none}
+.qs li::before{content:'›';color:var(--blue);font-weight:700;flex-shrink:0}
+
+.decl-box{margin-top:14px;background:var(--surf);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.decl-row{display:flex;align-items:baseline;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);font-size:13.5px;color:var(--ink)}
+.decl-row:last-child{border-bottom:none}
+.decl-tag{font-size:10px;font-weight:700;letter-spacing:.04em;padding:2px 7px;border-radius:3px;white-space:nowrap;flex-shrink:0}
+.decl-tag.t-blue {background:var(--blue-t);color:var(--blue)}
+.decl-tag.t-brick{background:var(--brick-t);color:var(--brick)}
+
+/* ── AFTER ── */
+.after-section{margin-bottom:44px}
+.after-cards{display:flex;flex-direction:column;gap:10px}
+.after-card{display:grid;grid-template-columns:36px 1fr;gap:0;background:var(--surf);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.after-num{display:flex;align-items:center;justify-content:center;background:var(--blue-t);color:var(--blue);font-size:12px;font-weight:700;border-right:1px solid #C5D5EF;font-variant-numeric:tabular-nums}
+.after-body{padding:14px 16px}
+.after-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.after-desc{font-size:13px;color:var(--mid);line-height:1.7}
+
+/* ── TIP ── */
+.tip{background:var(--surf);border:1px solid var(--border);border-radius:var(--r);padding:20px 22px;margin-bottom:44px}
+.tip-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--lt);margin-bottom:12px}
+.tip-qs{display:flex;flex-direction:column;gap:10px}
+.tip-q{font-size:13.5px;color:var(--mid);line-height:1.65;padding-left:14px;border-left:2px solid var(--border)}
+.tip-q b{color:var(--ink);display:block;margin-bottom:2px}
+
+/* ── FOOTER ── */
+.foot{margin-top:56px;padding-top:18px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:11.5px;color:var(--lt)}
+.foot b{color:var(--ink)}
+
+@media(max-width:520px){
+  .step-head{grid-template-columns:56px 1fr auto}
+  .step-num-block{padding-left:14px}
+  .step-badge{width:38px;height:38px}
+  .step-badge .sn-n{font-size:14px}
+  .step-body{padding-left:68px}
+  .prep-row{grid-template-columns:1fr}
+  .prep-q{border-right:none;border-bottom:1px solid var(--border)}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="page">
+
+  <header class="hd">
+    <div class="hd-eye">Phonogram 社内制度</div>
+    <h1 class="hd-title">持ち帰る会</h1>
+    <p class="hd-sub">他チームの経験を聞いて、自分の行動に変える。月1回・30分の全員参加制。</p>
+    <div class="chips">
+      <span class="chip">月 <b>1 回</b></span>
+      <span class="chip">所要 <b>30 分</b></span>
+      <span class="chip">1 グループ <b>4〜5 名</b></span>
+      <span class="chip">対象 <b>全正社員 21 名</b></span>
+    </div>
+  </header>
+
+  <!-- PURPOSE -->
+  <div class="purpose">
+    <div class="purpose-label">この会の目的</div>
+    <p class="purpose-text">
+      隣のメンバーやチームでは何に挑み、何に気づいたかを聞く。そこから<strong>「自分だったらどうする？」</strong>を考え、翌日の具体的な行動として宣言する場です。<br>
+      会の名前のとおり、毎回必ず<strong>「何か」を持ち帰る</strong>ことがゴールです。
+    </p>
+  </div>
+
+  <!-- PREP -->
+  <section class="prep">
+    <div class="section-label">事前準備</div>
+
+    <div class="deadline-bar">
+      <div class="deadline-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg>
+      </div>
+      <div class="deadline-text">
+        <strong>開催 3 日前（17 時）までに記入</strong>
+        <a href="https://apfvj2pk.sharepoint.com/:x:/s/msteams_570d33/IQDcnNn-Aqn-Tow7cIh5GlBoAWn2Ms57HXJBymdsZriW9dY?e=tD9bae" target="_blank" rel="noopener" style="color:var(--blue);font-weight:700;text-decoration:underline;text-underline-offset:2px">「今月の1コマ」Excel</a> に以下の内容を入力してください。
+      </div>
+    </div>
+
+    <div class="prep-card">
+      <div class="prep-row">
+        <div class="prep-q">だれのこと？<small>自分 or 同じグループのメンバー</small></div>
+        <div class="prep-a">自分 ／ ○○さん</div>
+      </div>
+      <div class="prep-row">
+        <div class="prep-q">何があった？<small>出来事・状況を簡潔に</small></div>
+        <div class="prep-a">2〜3 行で記入</div>
+      </div>
+      <div class="prep-row">
+        <div class="prep-q">何を感じた？<br>何に気づいた？<small>どちらの視点でも OK</small></div>
+        <div class="prep-a">感じたこと・気づいたことを</div>
+      </div>
+    </div>
+
+    <p class="prep-note">
+      他の誰かについて書く場合は <b>同じワークグループのメンバーに限定</b> してください。当日その場にいないメンバーの話では、深掘りができないためです。
+    </p>
+  </section>
+
+  <!-- STEPS -->
+  <section class="steps-section">
+    <div class="section-label">当日の流れ　計 30 分</div>
+
+    <div class="steps">
+
+      <!-- STEP 1 -->
+      <div class="step-card">
+        <div class="step-head">
+          <div class="step-num-block">
+            <div class="step-badge c-blue"><span class="sn-lbl">STEP</span><span class="sn-n">1</span></div>
+          </div>
+          <div class="step-title-wrap">
+            <div class="step-title">共有</div>
+            <div class="step-time">全員が話す</div>
+          </div>
+          <div class="step-dur">5 分</div>
+        </div>
+        <div class="step-body">
+          <p>今月の1コマ（Excel）の記入内容を元に、<strong>一人 1 分</strong>でグループにシェアします。良い出来事でも、難しかった出来事でもどちらも歓迎。</p>
+          <div class="step-key k-blue">「重要なトピックを選んでくる」義務はありません。記入した内容をそのまま話してください。</div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step-card">
+        <div class="step-head">
+          <div class="step-num-block">
+            <div class="step-badge c-indigo"><span class="sn-lbl">STEP</span><span class="sn-n">2</span></div>
+          </div>
+          <div class="step-title-wrap">
+            <div class="step-title">選択と深掘り</div>
+            <div class="step-time">多数決で 1 つ選ぶ</div>
+          </div>
+          <div class="step-dur">10 分</div>
+        </div>
+        <div class="step-body">
+          <p>全員で「一番気になったエピソード」を多数決で 1 つ選びます。話者への質問を通じて、状況を立体的に理解します。</p>
+          <ul class="qs">
+            <li>そのとき、どんな気持ちでしたか？</li>
+            <li>うまくいったとすれば、何が効きましたか？</li>
+            <li>うまくいかなかったとすれば、何が足りませんでしたか？</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step-card">
+        <div class="step-head">
+          <div class="step-num-block">
+            <div class="step-badge c-brick"><span class="sn-lbl">STEP</span><span class="sn-n">3</span></div>
+          </div>
+          <div class="step-title-wrap">
+            <div class="step-title">持ち帰り宣言</div>
+            <div class="step-time">一人ひとりが宣言する</div>
+          </div>
+          <div class="step-dur">15 分</div>
+        </div>
+        <div class="step-body">
+          <p>まず <strong>1 分間、静かに考える</strong> 時間を取ります。</p>
+          <div class="step-key k-brick">「もし自分に同じことが起きたら、自分はどうする？」</div>
+          <p>その問いを踏まえて、持ち帰りボードに気づきと宣言を入力しながら、声に出して発表します。</p>
+          <div class="decl-box">
+            <div class="decl-row"><span class="decl-tag t-blue">気づき</span>今日気づいたこと</div>
+            <div class="decl-row"><span class="decl-tag t-brick">宣言</span>明日から試すこと（具体的に 1 つ）</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- AFTER -->
+  <section class="after-section">
+    <div class="section-label">会が終わったら</div>
+    <div class="after-cards">
+      <div class="after-card">
+        <div class="after-num">01</div>
+        <div class="after-body">
+          <div class="after-title">翌月の定例会で全体報告</div>
+          <div class="after-desc">担当者が全員の宣言内容を定例会でスクリーン共有します。今月の MVT（Most Valuable Takeout）も発表されます。</div>
+        </div>
+      </div>
+      <div class="after-card">
+        <div class="after-num">02</div>
+        <div class="after-body">
+          <div class="after-title">翌月定例会の司会者が実践報告（3 分）</div>
+          <div class="after-desc">前回の持ち帰る会で宣言したことを実際に試してみてどうだったかを、定例会の司会者が 3 分で報告します。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIPS -->
+  <div class="tip">
+    <div class="tip-label">記入に迷ったら</div>
+    <div class="tip-qs">
+      <div class="tip-q">
+        <b>どんな出来事を書けばいい？</b>
+        ドラマチックな出来事でなくてOKです。「小さいけれど気になった」レベルで十分です。小さな話ほど深掘りすると面白くなります。
+      </div>
+      <div class="tip-q">
+        <b>ネガティブな話でもいい？</b>
+        はい。うまくいかなかった話は、聞く側が一番学べる素材になります。失敗談を共有することが会の質を上げます。
+      </div>
+      <div class="tip-q">
+        <b>自分ではなく他の人のことを書いてもいい？</b>
+        同じグループのメンバーであればOKです。本人が気づいていない良い行動が可視化されることがあります。
+      </div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <b>Phonogram</b>
+    <span>持ち帰る会 — 参加者ガイド　2026年7月</span>
+  </footer>
+
+</div>
